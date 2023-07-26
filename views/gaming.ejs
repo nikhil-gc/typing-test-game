@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- custom css -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Typing Game - Javascript</title>
+    <style>
+        * {
+  box-sizing: border-box;
+}
+
+
+
+body {
+  background-color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button {
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 5px 15px;
+}
+
+select {
+  width: 200px;
+  padding: 5px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 0;
+  background-color: #a7c5e3;
+}
+
+select:focus,
+button:focus {
+  outline: 0;
+}
+
+.settings-btn {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  background: #a7c5e3;
+}
+
+.theme-btn{
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  /* background: #a7c5e3; */
+}
+
+.settings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  height: 70px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.settings.hide {
+  transform: translateY(-100%);
+}
+
+.container {
+  background-color: #34495e;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  position: relative;
+  text-align: center;
+  width: 500px;
+}
+
+h2 {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  border-radius: 4px;
+  margin: 0 0 40px;
+}
+
+h1 {
+  margin: 0;
+}
+
+input {
+  border: 0;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 300px;
+  padding: 12px 20px;
+  margin-top: 10px;
+  background: #a7c5e3;
+}
+
+.score-container {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+}
+
+.time-container {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+}
+
+.end-game-container {
+  background-color: inherit;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.return{
+    position: absolute;
+    top: 70px;
+    left: 0;
+  }
+
+    </style>
+</head>
+
+<body>
+  <a href="/single" class="return"> <img src="images/return.png" alt="return to home" width="50px" height="50px"></a>
+    <button id="settings-btn" class="settings-btn">
+        ⚙️
+    </button>
+    <button class="theme-btn" id="theme-btn">
+            <span id="theme-text" class="material-symbols-rounded" onclick="changeTheme()">light_mode</span>
+    </button>
+    
+
+    <div id="settings" class="settings">
+        <div>
+            <h1>hello Player <%=Username%> !</h1>
+        </div>
+    </div>
+
+    <div class="container" id="container">
+        <h2>👩‍💻 Typing Game 👨‍💻</h2>
+        <small>Type the following:</small>
+
+        <h1 id="word"></h1>
+
+        <input type="text" id="text" autocomplete="off" placeholder="Type the word here..." />
+
+        <p class="time-container">Time left: <span id="time">30s</span></p>
+
+        <p class="score-container">Score: <span id="score">0</span></p>
+
+        <div id="end-game-container" class="end-game-container"></div>
+    </div>
+
+    
+    <!-- custom js -->
+    <!-- <script src="js/script.js"></script> -->
+    <script>
+        // Selectors
+const word = document.getElementById("word");
+const text = document.getElementById("text");
+const scoreElement = document.getElementById("score");
+const timeElement = document.getElementById("time");
+const endGameElement = document.getElementById("end-game-container");
+const settingBtn = document.getElementById("settings-btn");
+const settings = document.getElementById("settings");
+const difficultySelect = document.getElementById("difficulty");
+const themeButton = document.getElementById("theme-btn");
+
+
+function changeTheme(){
+  btn = document.getElementById("theme-text");
+  console.log(btn.innerHTML);
+  if(btn.innerHTML==="light_mode"){
+    btn.innerHTML="dark_mode";
+    container = document.getElementById('container');
+    container.style.backgroundColor = "#CEE6F3";
+    themeButton.style.backgroundColor = "#2c3e50";
+    container.style.color = "black";
+    document.body.style.backgroundColor = "white";
+
+  }else{
+    btn.innerHTML="light_mode";
+    container = document.getElementById('container');
+    container.style.backgroundColor = "#34495e";
+    container.style.color = "white";
+    themeButton.style.backgroundColor = "white";
+    document.body.style.backgroundColor = "#2c3e50";
+  }
+}
+// list of words for game
+const words = [
+  "came",
+  "come",
+  "letter",
+  "end",
+  "I",
+  "all",
+  "number",
+  "oil",
+  "within",
+  "now",
+  "right",
+  "feet",
+  "leave",
+  "what",
+  "now",
+  "fall",
+  "came",
+  "live",
+  "year",
+  "about",
+  "got",
+  "came",
+  "set",
+  "were",
+  "follow",
+  "study",
+  "day",
+  "eye",
+  "over",
+  "why",
+  "why",
+  "talk",
+  "soon",
+  "because",
+  "eye",
+  "watch",
+  "year",
+  "her",
+  "any",
+  "by",
+  "I",
+  "both",
+  "around",
+  "book",
+  "line",
+  "mother",
+  "open",
+  "now",
+  "that",
+  "mile",
+  "go",
+  "by",
+  "found",
+  "said",
+  "eye",
+  "come",
+  "so",
+  "place",
+  "food",
+  "got",
+  "city",
+  "always",
+  "these",
+  "any",
+  "use",
+  "been",
+  "was",
+  "read",
+  "their",
+  "without",
+  "as",
+  "change",
+  "leave",
+  "can",
+  "they",
+  "those",
+  "eat",
+  "never",
+  "no",
+  "eat",
+  "story",
+];
+
+// Init word
+let randomWord;
+
+// Init score
+let score = 0;
+
+// Init time
+// let time = 5;
+
+// wrong typed words and total words
+let wrongTyped = 0;
+let correctTyped = 0;
+
+let time = 30;
+// count down
+const timeInterval = setInterval(updateTime, 1000);
+
+// Random words generator from Array
+function getRandomWord() {
+  return words[Math.floor(Math.random() * words.length)];
+}
+
+// add word to DOM
+function addWordToDOM() {
+  randomWord = getRandomWord();
+  word.innerHTML = randomWord;
+}
+
+// update score
+function updateScore() {
+  score++;
+  scoreElement.innerHTML = score;
+}
+
+// update time
+function updateTime() {
+  time--;
+  timeElement.innerHTML = time + "s";
+
+  if (time === 0) {
+    clearInterval(timeInterval);
+
+    //   game over
+    gameOver();
+  }
+}
+
+// show Game over
+function gameOver() {
+  let accuracy = ((correctTyped/(correctTyped+wrongTyped))*100).toFixed(2);
+  endGameElement.innerHTML = `
+  <h1>Time ran out</h1>
+  <p>Your final score is : ${score}</p>
+  <p>Your accuracy is : ${(accuracy)}</p>
+  <button onclick="location.reload()" style="
+  background: #4e5e73; color: #fff;">Reload</button>
+    `;
+
+  endGameElement.style.display = "flex";
+}
+
+addWordToDOM();
+
+// Typing Event
+text.addEventListener("input", (e) => {
+  const insertedText = e.target.value;
+
+  if (insertedText === randomWord) {
+    addWordToDOM();
+    updateScore();
+
+    e.target.value = "";
+
+    updateTime();
+    correctTyped++;
+  }else{
+    if(insertedText.length === randomWord.length)
+      wrongTyped++;
+  }
+});
+
+// Settings btn
+settingBtn.addEventListener("click", () => settings.classList.toggle("hide"));
+
+// setting select
+difficultySelect.addEventListener("change", (e) => {
+  difficulty = e.target.value;
+  localStorage.setItem("difficulty", difficulty);
+});
+
+    </script>
+</body>
+
+</html>
